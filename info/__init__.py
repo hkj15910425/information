@@ -11,14 +11,12 @@ from redis import StrictRedis
 
 from config import config
 
-# 初始化数据库
-#  在Flask很多扩展里面都可以先初始化扩展的对象，然后再去调用 init_app 方法去初始化
-from info.utils.common import do_index_class
-
 db = SQLAlchemy()
 
 # https://www.cnblogs.com/xieqiankun/p/type_hints_in_python3.html
 redis_store = None  # type: StrictRedis
+
+
 # redis_store: StrictRedis = None
 
 
@@ -46,7 +44,8 @@ def create_app(config_name):
     db.init_app(app)
     # 初始化 redis 存储对象
     global redis_store
-    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT, decode_responses=True)
+    redis_store = StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT,
+                              decode_responses=True)
     # 开启当前项目 CSRF 保护，只做服务器验证功能
     # 帮我们做了：从cookie中取出随机值，从表单中取出随机，然后进行校验，并且响应校验结果
     # 我们需要做：1. 在返回响应的时候，往cookie中添加一个csrf_token，2. 并且在表单中添加一个隐藏的csrf_token
@@ -54,6 +53,10 @@ def create_app(config_name):
     CSRFProtect(app)
     # 设置session保存指定位置
     Session(app)
+
+    # 初始化数据库
+    #  在Flask很多扩展里面都可以先初始化扩展的对象，然后再去调用 init_app 方法去初始化
+    from info.utils.common import do_index_class
     # 添加自定义过滤器
     app.add_template_filter(do_index_class, "index_class")
 

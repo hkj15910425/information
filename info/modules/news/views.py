@@ -14,6 +14,7 @@ def news_detail(news_id):
     :param news_id:
     :return:
     """
+
     # 查询用户登录信息
     user_id = session.get("user_id", None)
     user = None
@@ -39,7 +40,7 @@ def news_detail(news_id):
 
     data = {
         "user": user.to_dict() if user else None,
-        "news_dict_li": news_dict_li,
+        "news_dict_li": news_dict_li
     }
 
     return render_template("news/detail.html", data=data)
